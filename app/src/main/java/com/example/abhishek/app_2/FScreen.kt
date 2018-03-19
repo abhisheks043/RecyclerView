@@ -1,59 +1,57 @@
-package com.example.abhishek.app_2;
+package com.example.abhishek.app_2
 
-import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
+import android.os.Build
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ImageView
 
-import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso
 
-public class FScreen extends AppCompatActivity {
+class FScreen : AppCompatActivity() {
 
-    String url_image="";
-    ImageView imView;
+    internal var url_image: String? = ""
+    internal var imView: ImageView?= null
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fscreen);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_fscreen)
 
-        imView = (ImageView) findViewById(R.id.imView);
+        imView = findViewById<View>(R.id.imView) as ImageView
 
-        Bundle data = getIntent().getExtras();
-        url_image = data.getString("url_string");
+        val data = intent.extras
+        url_image = data!!.getString("url_string")
 
-        Picasso.with(getApplicationContext())
+        Picasso.with(applicationContext)
                 .load(url_image)
-                .into(imView);
+                .into(imView)
 
-        fullScreen();
+        fullScreen()
     }
 
-    public void fullScreen() {
+    fun fullScreen() {
 
         // BEGIN_INCLUDE (get_current_ui_flags)
         // The UI options currently enabled are represented by a bitfield.
         // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
+        val uiOptions = window.decorView.systemUiVisibility
+        var newUiOptions = uiOptions
         // END_INCLUDE (get_current_ui_flags)
         // BEGIN_INCLUDE (toggle_ui_flags)
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+        val isImmersiveModeEnabled = uiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == uiOptions
         if (isImmersiveModeEnabled) {
         } else {
         }
 
         // Navigation bar hiding:  Backwards compatible to ICS.
         if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         }
 
         // Status bar hiding: Backwards compatible to Jellybean
         if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
         }
 
         // Immersive mode: Backward compatible to KitKat.
@@ -65,10 +63,10 @@ public class FScreen extends AppCompatActivity {
         // semi-transparent, and the UI flag does not get cleared when the user interacts with
         // the screen.
         if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
 
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+        window.decorView.systemUiVisibility = newUiOptions
         //END_INCLUDE (set_ui_flags)
     }
 
